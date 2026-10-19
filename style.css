@@ -1,5 +1,5 @@
 /* ============================================================
-   Design tokens — "the study"
+   Design tokens: "the study"
    Espresso and brass instead of paper and forest green: a
    private-study, old-money feel rather than a tech landing page.
    ============================================================ */
@@ -289,3 +289,22 @@ article.prose pre code { background: none; border: none; padding: 0; color: inhe
 footer { padding: 50px 0 70px; text-align: center; color: var(--ink-faint); font-family: var(--font-body); font-style: italic; font-size: 0.95rem; }
 footer .coords { margin-bottom: 10px; }
 footer a { color: var(--ink-soft); }
+
+
+/* ---------------- Inner-page photo hero ---------------- */
+.hero-sub { min-height: max(46vh, 380px); }
+.hero-sub .hero-text { max-width: 980px; padding-bottom: 34px; }
+.hero-sub .hero-text h1 { font-size: clamp(2rem, 5vw, 2.7rem); margin: 0 0 12px; }
+.hero-sub .hero-text p.lede { color: var(--ink-soft); font-size: 1.08rem; max-width: 56ch; margin: 0; }
+.hero-sub .hero-text p:has(.brass-button) { margin-top: 18px; }
+.hero-sub .section-label { margin-bottom: 6px; }
+
+/* Mobile: stack the project ledger so nothing clips */
+@media (max-width: 640px) {
+  .ledger-item { grid-template-columns: 1fr; gap: 6px; padding-left: 0; padding-right: 0; }
+  .ledger-item .tag, .ledger-item .status { white-space: normal; }
+  .hero-sub { min-height: max(52vh, 400px); }
+}
+@media (max-width: 640px) {
+  main.wide-wrap { padding-left: 28px !important; padding-right: 28px !important; }
+}

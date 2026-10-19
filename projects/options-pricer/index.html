@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Options Pricer and Volatility Surface | Vinayak Varal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="monogram" href="../../index.html" style="text-decoration:none;">V</a>
+  <div class="links">
+    <a href="../../resume.html">CV</a>
+    <a href="../../skills.html">Skills</a>
+    <a href="../../projects.html">Projects</a>
+    <a href="../../contact.html">Contact</a>
+  </div>
+</nav>
+
+<div class="wrap" style="padding-top: 40px;">
+  <a class="back-link" href="../../projects.html">&larr; Back to projects</a>
+
+  <h1 style="font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 8px;">Options pricer and implied volatility surface</h1>
+  <p style="color: var(--ink-soft); font-size: 1.05rem; margin-top: 0;">A Black-Scholes-Merton pricer, Greeks, and an implied volatility solver, built from scratch and pointed at live option chains.</p>
+
+  <dl class="meta-block">
+    <div class="item"><dt>Type</dt><dd>Derivatives pricing</dd></div>
+    <div class="item"><dt>Data</dt><dd>Live option chains via yfinance</dd></div>
+    <div class="item"><dt>Tools</dt><dd>Python, NumPy, SciPy, Plotly</dd></div>
+    <div class="item"><dt>Status</dt><dd>Working, command-line tool</dd></div>
+  </dl>
+
+  <article class="prose">
+    <h2>What it does</h2>
+    <p>A command-line tool that prices a European option with Black-Scholes-Merton, reports the Greeks, backs out implied volatility from market prices, and builds an implied volatility smile and a full surface across strikes and expiries.</p>
+
+    <h2>Structure</h2>
+    <p>The code is split by job rather than kept in one script:</p>
+    <pre><code>core/            bsm.py, greeks.py, iv_solver.py
+data/            market_data.py   (option chains)
+analysis/        surface.py       (strike x expiry x IV grid)
+visualization/   plots.py         (smile, 3D surface)
+config.py        defaults, no magic numbers buried in code
+main.py          menu: price + Greeks, smile, full surface</code></pre>
+
+    <h2>Pricing and Greeks</h2>
+    <p>Delta, gamma, vega, theta and rho are computed in closed form. Theta is quoted per calendar day (divided by 365), while vega and rho are left unscaled, so each number is stated per unit change rather than per 1% move. Being explicit about those conventions matters more than the formulas, since a mismatch there quietly produces plausible but wrong numbers.</p>
+
+    <h2>Implied volatility</h2>
+    <p>Implied volatility has no closed form, so it is solved with Newton-Raphson, using vega as the derivative. Two guards keep it from misbehaving: a check that skips the step when vega is close to zero (deep in or out of the money), and a floor on sigma so an iteration cannot step into negative volatility.</p>
+
+    <h2>The surface</h2>
+    <p>For each expiry, the solver is run across the listed strikes. Expiries under a minimum number of days are skipped, because near-expiry quotes are dominated by noise. The scattered points are then interpolated onto a regular grid and drawn as a smooth 3D mesh. Where the data does not cover the grid, the surface is left blank instead of extrapolating a shape the market never showed.</p>
+
+    <h2>Cleaning up the hardcoding</h2>
+    <p>An early version had risk-free rate, starting volatility guess, grid size and filters scattered through the code. They now live in one config file (risk-free rate, initial sigma guess, minimum days to expiry, grid size, price floor), so changing an assumption is a one-line edit.</p>
+
+    <div class="callout">
+      <strong>Known limitation:</strong> implied volatility is computed from the last traded price, because bid and ask quotes are unreliable outside market hours. On illiquid strikes the last trade can be stale, which distorts the smile at the wings. A natural next step is switching to mid-quotes during market hours and filtering by open interest.
+    </div>
+
+  </article>
+
+</div>
+
+<footer class="wide-wrap">
+  <div>
+    <a href="../../index.html">&larr; Vinayak Varal</a>
+  </div>
+</footer>
+
+</body>
+</html>

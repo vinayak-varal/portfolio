@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Projects — Vinayak Varal</title>
+<title>Projects | Vinayak Varal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -11,7 +11,9 @@
 </head>
 <body>
 
-<nav class="site-nav">
+<header class="hero hero-photo hero-sub">
+  <img src="assets/bangkok-rooftops.jpg" alt="Temple rooftops and the Bangkok skyline" style="object-position:center 55%;" />
+  <nav class="site-nav">
   <a href="index.html" class="monogram" style="text-decoration:none;">V</a>
   <div class="links">
     <a href="resume.html">CV</a>
@@ -20,18 +22,44 @@
     <a href="contact.html">Contact</a>
   </div>
 </nav>
-
-<header class="page-header wide-wrap">
+  <div class="hero-text">
   <div class="section-label">Selected Work</div>
   <h1>Projects</h1>
   <p class="lede">Built from first principles, thresholds pulled from data rather than guessed, and the occasional mistake left visible rather than edited out.</p>
+</div>
 </header>
 
 <main class="wide-wrap" style="padding: 40px 0 76px;">
   <div class="ledger">
+    <a class="ledger-item" href="projects/options-pricer/index.html">
+      <span class="numeral">I</span>
+      <span>
+        <h3>Options Pricer and Volatility Surface</h3>
+        <p>Black-Scholes-Merton pricing, Greeks, a Newton-Raphson implied volatility solver, and a 3D surface built from live option chains.</p>
+      </span>
+      <span class="tag">Derivatives</span>
+    </a>
+
+    <a class="ledger-item" href="projects/thai-algo-trading/index.html">
+      <span class="numeral">II</span>
+      <span>
+        <h3>Systematic Trading on the SET</h3>
+        <p>A swappable backtesting engine for Thai equities, built around point-in-time index membership to avoid survivorship bias.</p>
+      </span>
+      <span class="tag">Systematic</span>
+    </a>
+
+    <a class="ledger-item" href="projects/bank-stress-test/index.html">
+      <span class="numeral">III</span>
+      <span>
+        <h3>Bank Stress Test Model</h3>
+        <p>A switchable Baseline, Adverse and Severe scenario model in Excel, with IRB risk weights built by hand.</p>
+      </span>
+      <span class="tag">Risk</span>
+    </a>
 
     <a class="ledger-item" href="projects/lamphun-ndvi/index.html">
-      <span class="numeral">I</span>
+      <span class="numeral">IV</span>
       <span>
         <h3>Vegetation Loss in the Lamphun Corridor</h3>
         <p>A from-scratch NDVI pipeline on real Sentinel-2 imagery, a threshold derived from the data itself, and a seasonal mistake that changed the answer by 5x before it was caught.</p>
@@ -40,7 +68,7 @@
     </a>
 
     <div class="ledger-item">
-      <span class="numeral">II</span>
+      <span class="numeral">V</span>
       <span>
         <h3>Anime Recommender</h3>
         <p>A clustering-based recommendation pipeline over anime metadata, using UMAP and HDBSCAN.</p>
@@ -54,9 +82,9 @@
 <footer class="wide-wrap">
   <p class="coords">Bangkok, Thailand</p>
   <p>
-    <a href="mailto:your.email@example.com">your.email@example.com</a> ·
-    <a href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub</a> ·
-    <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:vinayakvaral@gmail.com">vinayakvaral@gmail.com</a> ·
+    <a href="https://github.com/vinayak-varal" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.linkedin.com/in/vinayakvaral" target="_blank" rel="noopener">LinkedIn</a>
   </p>
 </footer>
 

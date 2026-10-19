@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bank Stress Test Model | Vinayak Varal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="monogram" href="../../index.html" style="text-decoration:none;">V</a>
+  <div class="links">
+    <a href="../../resume.html">CV</a>
+    <a href="../../skills.html">Skills</a>
+    <a href="../../projects.html">Projects</a>
+    <a href="../../contact.html">Contact</a>
+  </div>
+</nav>
+
+<div class="wrap" style="padding-top: 40px;">
+  <a class="back-link" href="../../projects.html">&larr; Back to projects</a>
+
+  <h1 style="font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 8px;">Bank stress test model</h1>
+  <p style="color: var(--ink-soft); font-size: 1.05rem; margin-top: 0;">A scenario-driven capital stress test for a bank, built from scratch in Excel as a way to learn how regulators think about resilience.</p>
+
+  <dl class="meta-block">
+    <div class="item"><dt>Type</dt><dd>Risk modeling</dd></div>
+    <div class="item"><dt>Tools</dt><dd>Excel</dd></div>
+    <div class="item"><dt>Scenarios</dt><dd>Baseline, Adverse, Severe</dd></div>
+    <div class="item"><dt>Status</dt><dd>Learning project</dd></div>
+  </dl>
+
+  <article class="prose">
+    <h2>The idea</h2>
+    <p>A bank is asked a simple question: if the economy turns, do you still have enough capital? This model builds that question as a working spreadsheet. It is a learning project, built to understand the mechanics end to end rather than to reproduce any real institution.</p>
+
+    <h2>How it works</h2>
+    <ul>
+      <li><strong>Scenarios.</strong> Three macro paths (Baseline, Adverse, Severe) feed the same model. A set of option buttons switches the whole workbook between them, so the outputs can be compared without rebuilding anything.</li>
+      <li><strong>Risk weights.</strong> Risk-weighted assets are computed with an Internal Ratings-Based (IRB) approach, where each exposure's risk weight comes from its own probability of default, loss given default and maturity rather than a fixed regulatory bucket.</li>
+      <li><strong>Capital.</strong> Losses and income under each scenario flow through to capital, which is measured against requirements.</li>
+    </ul>
+
+    <h2>What I took from it</h2>
+    <p>The main lesson was how much the answer depends on the assumptions behind the scenarios, and how a clean switchable structure makes those assumptions visible. Building the IRB step by hand made the regulatory formula feel like something with a reason behind it instead of a black box.</p>
+
+    <div class="callout">
+      <strong>Scope:</strong> this is a teaching model with simplified inputs. It illustrates the method, and should not be read as a forecast for any real bank.
+    </div>
+
+  </article>
+
+</div>
+
+<footer class="wide-wrap">
+  <div>
+    <a href="../../index.html">&larr; Vinayak Varal</a>
+  </div>
+</footer>
+
+</body>
+</html>

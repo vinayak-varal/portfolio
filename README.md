@@ -11,8 +11,15 @@ skills.html                Skills
 projects.html              Selected Work (project list)
 contact.html                Contact
 style.css                Shared stylesheet
+resume.pdf               Public CV (download button on the CV page)
 assets/                  Images used across the site
 projects/
+  options-pricer/
+    index.html           Project write-up
+  thai-algo-trading/
+    index.html           Project write-up
+  bank-stress-test/
+    index.html           Project write-up
   lamphun-ndvi/
     index.html           Project write-up
     README.md            Project-specific readme (methodology, results)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Systematic Trading on the SET | Vinayak Varal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="monogram" href="../../index.html" style="text-decoration:none;">V</a>
+  <div class="links">
+    <a href="../../resume.html">CV</a>
+    <a href="../../skills.html">Skills</a>
+    <a href="../../projects.html">Projects</a>
+    <a href="../../contact.html">Contact</a>
+  </div>
+</nav>
+
+<div class="wrap" style="padding-top: 40px;">
+  <a class="back-link" href="../../projects.html">&larr; Back to projects</a>
+
+  <h1 style="font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 8px;">Systematic trading research on the SET</h1>
+  <p style="color: var(--ink-soft); font-size: 1.05rem; margin-top: 0;">A backtesting framework and strategy research for Thai equities, with survivorship bias handled deliberately from the start.</p>
+
+  <dl class="meta-block">
+    <div class="item"><dt>Market</dt><dd>Stock Exchange of Thailand</dd></div>
+    <div class="item"><dt>Benchmark</dt><dd>SET index</dd></div>
+    <div class="item"><dt>Tools</dt><dd>Python, pandas, Jupyter</dd></div>
+    <div class="item"><dt>Status</dt><dd>Ongoing research</dd></div>
+  </dl>
+
+  <article class="prose">
+    <h2>Where it started</h2>
+    <p>The first idea was pairs trading: pick related stocks in the SET50, go long one, short the other, and trade the spread. Thailand makes the short leg awkward, so the plan used single stock futures on TFEX for it. Medium-frequency, with the SET index as the benchmark.</p>
+
+    <h2>Survivorship bias, handled early</h2>
+    <p>Backtesting on today's index constituents quietly flatters results, because the stocks that were dropped along the way are missing. To avoid that, I started building a point-in-time record of SET50 membership from the first half of 2021, so each backtest date only sees the stocks that were actually in the index then.</p>
+
+    <h2>A swappable engine</h2>
+    <p>The design goal is one backtester that any strategy can plug into. Data loaders, the universe, signals, transaction costs and the backtester itself are separate pieces, so changing a strategy does not mean rewriting the plumbing.</p>
+
+    <h2>Scoping down</h2>
+    <p>Pairs trading turned out to be a lot of machinery for a first pass. I scaled back to simpler, well-known signals (momentum, RSI and moving-average crossovers) run in Jupyter notebooks, so the engine and the cost model could be tested on something easy to reason about before returning to cointegration.</p>
+
+    <div class="callout">
+      <strong>Status:</strong> research in progress. No performance claims are made on this page until results are tested out of sample and net of costs.
+    </div>
+
+  </article>
+
+</div>
+
+<footer class="wide-wrap">
+  <div>
+    <a href="../../index.html">&larr; Vinayak Varal</a>
+  </div>
+</footer>
+
+</body>
+</html>
