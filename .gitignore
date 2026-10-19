@@ -1,0 +1,15 @@
+# Raw satellite data (large, reproducible from Copernicus, don't commit)
+projects/*/data/
+*.tif
+*.tiff
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
