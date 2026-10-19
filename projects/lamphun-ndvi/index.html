@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vegetation Loss in the Lamphun Corridor — Vinayak Varal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="monogram" href="../../index.html" style="text-decoration:none;">V</a>
+  <div class="links">
+    <a href="../../resume.html">CV</a>
+    <a href="../../skills.html">Skills</a>
+    <a href="../../projects.html">Projects</a>
+    <a href="../../contact.html">Contact</a>
+  </div>
+</nav>
+
+<div class="wrap" style="padding-top: 40px;">
+  <a class="back-link" href="../../projects.html">&larr; Back to projects</a>
+
+  <h1 style="font-size: clamp(1.7rem, 4vw, 2.4rem); margin-bottom: 8px;">Vegetation loss in the Lamphun industrial corridor</h1>
+  <p style="color: var(--ink-soft); font-size: 1.05rem; margin-top: 0;">A from-scratch NDVI pipeline on real Sentinel-2 imagery, including a threshold derived from the data itself, and a seasonal mistake that changed the answer by 5x before it got caught.</p>
+
+  <dl class="meta-block">
+    <div class="item"><dt>Location</dt><dd>Lamphun, Thailand</dd></div>
+    <div class="item"><dt>Data</dt><dd>Sentinel-2 L2A, bands B04 / B08</dd></div>
+    <div class="item"><dt>Period</dt><dd>Jan 2024 – Jan 2026</dd></div>
+    <div class="item"><dt>Tools</dt><dd>Python, rasterio, NumPy, SciPy</dd></div>
+  </dl>
+
+  <figure class="figure">
+    <img src="../../assets/lamphun-ndvi-hero.png" alt="False-color and NDVI composite of the Lamphun scene">
+    <figcaption>Real Sentinel-2 imagery over Lamphun. Darker green reads as denser vegetation; lighter patches are likely cropland at a different growth stage.</figcaption>
+  </figure>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num">0.06</div><div class="cap">NDVI threshold, derived from the histogram itself, not assumed</div></div>
+    <div class="stat"><div class="num">94.4%</div><div class="cap">of the scene classified as vegetation, Jan 2026</div></div>
+    <div class="stat"><div class="num loss">863 ha</div><div class="cap">converted from vegetation to non-vegetation, Jan 2024 → Jan 2026</div></div>
+  </div>
+
+  <article class="prose">
+
+    <h2>Why NDVI works</h2>
+    <p>Every satellite band is a grid of numbers: how much light bounced back at a given wavelength. Chlorophyll absorbs red light for photosynthesis but has no use for near-infrared, so healthy leaves reflect NIR strongly. Water absorbs both. Bare soil and rooftops sit somewhere in between. NDVI just turns that relationship into a single number:</p>
+    <pre><code>NDVI = (NIR - Red) / (NIR + Red)</code></pre>
+    <p>It ranges from -1 to 1, with higher values indicating denser, healthier vegetation.</p>
+
+    <h2>Getting real data, not a synthetic stand-in</h2>
+    <p>Bands B04 (Red) and B08 (NIR) were pulled from the Copernicus Data Space Ecosystem's browser, as raw georeferenced GeoTIFFs at native resolution rather than a pre-rendered visualization, which matters: a compressed preview image remaps pixel values for display and throws away the actual reflectance data NDVI needs.</p>
+
+    <h2>A nodata artifact, caught before it mattered</h2>
+    <p>A first histogram of the raw NDVI values showed a small spike sitting at exactly -1.0, a suspiciously round number for real reflectance data. Checking it directly:</p>
+    <pre><code>suspicious = ndvi_result &lt;= -0.99
+suspicious.sum()  # 1,997 pixels
+suspicious.mean()  # 0.066% of the scene</code></pre>
+    <p>At roughly 0.07% of the image, this was almost certainly a nodata artifact from the edge of the satellite tile, not a real land feature. Real rivers and ponds would occupy far more than 0.07% of a scene this size. Those pixels were masked to <code>NaN</code> rather than left to quietly pollute the classification and area statistics downstream.</p>
+
+    <h2>Deriving a threshold from the data, not a guess</h2>
+    <p>Rather than picking a round number like 0.2 off a textbook, the classification threshold was pulled from the scene's own NDVI histogram. Water, soil, and built-up pixels cluster in one region; vegetation clusters in another; the point where pixel counts dip lowest between the two populations is the least ambiguous place to draw the line, the same logic behind Otsu's method for image thresholding, derived here manually rather than imported from a library.</p>
+    <p>That valley landed at <strong>NDVI ≈ 0.06</strong>. Re-running the same derivation on a second, seasonally different scene (dry-season January data, rather than the original wet-season pull) returned a closely matching value, which is reassuring evidence the threshold reflects something real about this landscape rather than a quirk of one particular image.</p>
+
+    <h2>Ground-truthing against reality</h2>
+    <p>A cluster of low-NDVI pixels was checked by converting its pixel coordinates back to real latitude/longitude via the file's affine transform, then looking it up on satellite maps directly. It turned out to sit at a lake-forest boundary rather than inside a discrete built-up area, most likely a mixed-pixel effect: at 10m (native) to roughly 18m (as downloaded) resolution, a single pixel can straddle two different land types and return a blended, ambiguous signature. That's a known, real limitation of resolution-limited classification, not a bug in the code.</p>
+
+    <h2>From pixels to hectares</h2>
+    <p>Pixel size in the downloaded files is recorded in degrees (WGS84), not meters, and a degree of longitude is not a fixed physical distance, it shrinks the further you get from the equator. Converting required Lamphun's actual latitude:</p>
+    <pre><code>height_m = abs(transform.e) * 111_320
+width_m  = transform.a * cos(radians(transform.f)) * 111_320
+pixel_area_ha = (height_m * width_m) / 10_000</code></pre>
+    <p>Total scene area came out to roughly 97,258 hectares (about 972 km²), consistent with the zoom level the imagery was captured at, a useful sanity check that no unit error had crept into the chain.</p>
+
+    <div class="callout">
+      <strong>The mistake that mattered most:</strong> a first attempt at before/after change detection compared a May 2024 scene against a June 2026 scene and found 4,431 hectares "converted" from vegetation to non-vegetation, an implausibly large number representing roughly 80% of all non-vegetation in the newer scene. The cause wasn't a code bug: May sits in Thailand's dry season, June is deep in the wet season. The comparison was largely measuring the change of seasons, not the change of land use, and applying a threshold derived from wet-season data to a dry-season image compounded the error. Re-running the comparison with two scenes from the same month, January 2024 against January 2026, brought the figure down to a far more plausible <strong>863 hectares</strong>. Left uncaught, this is exactly the kind of error that turns a rigorous-looking analysis into a confidently wrong one.
+    </div>
+
+    <h2>Limitations</h2>
+    <p>Worth stating plainly rather than glossing over: imagery was downloaded at resampled "HIGH" resolution (~18m per pixel) rather than Sentinel-2's native 10m grid, and in WGS84 geographic coordinates rather than a proper projected CRS, which is why the latitude-aware conversion above was necessary in the first place. Cloud cover, even at a low filtered percentage, can still register as non-vegetation and wasn't separately masked. And as the ground-truthing step showed, NDVI alone cannot cleanly separate water, bare soil, and built-up land at boundaries or in mixed pixels, a genuine constraint of the technique, not just this implementation.</p>
+
+    <h2>Code</h2>
+    <p>Full source, including the threshold-derivation function, classification, reprojection/alignment across mismatched image extents, and change detection, is in the <code>src/</code> folder of this repository.</p>
+
+  </article>
+
+</div>
+
+<footer class="wide-wrap">
+  <div>
+    <a href="../../index.html">&larr; Vinayak Varal</a>
+  </div>
+</footer>
+
+</body>
+</html>
